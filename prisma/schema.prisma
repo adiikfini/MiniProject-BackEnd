@@ -15,3 +15,213 @@ model Sample {
 
   @@map("samples")
 }
+
+model User {
+  user_id             Int              @id @default(autoincrement())
+  role                String
+  name                String
+  email               String           @unique
+  password_hash       String
+  phone_number        String?
+  profile_picture_url String?
+  refferal_code       String           @unique
+  point_balance       Int              @default(0)
+  
+  // Relasi
+  organizerProfile    EventOrganizer?
+  transactions        Transaction[]
+  reviews             Review[]
+  pointHistory        PointHistory[]
+  referralsMade       Referral[]       @relation("Referrer")
+  referralsReceived   Referral[]       @relation("Referred")
+  userCoupons         UserCoupon[]
+
+  @@map("users")
+}
+
+model EventOrganizer {
+  organizer_id   Int       @id @default(autoincrement())
+  user_id        Int       @unique
+  description    String    @db.Text
+  company_name   String
+  rating_average Decimal   @default(0)
+  
+  // Relasi
+  user           User      @relation(fields: [user_id], references: [user_id])
+  events         Event[]
+  vouchers       Voucher[]
+
+  @@map("event_organizers")
+}
+
+model Event {
+  event_id        Int            @id @default(autoincrement())
+  organizer_id    Int
+  name_price      String
+  price           Decimal
+  is_paid         Boolean        @default(false)
+  start_date      DateTime
+  end_date        DateTime
+  total_seats     Int
+  available_seats Int
+  description     String         @db.Text
+  location        String
+  category        String
+  
+  // Relasi
+  organizer       EventOrganizer @relation(fields: [organizer_id], references: [organizer_id])
+  ticketTypes     TicketType[]
+  transactions    Transaction[]
+  reviews         Review[]
+  vouchers        Voucher[]
+
+  @@map("events")
+}
+
+model TicketType {
+  tiket_id           Int               @id @default(autoincrement())
+  event_id           Int
+  name               String
+  price              Decimal
+  quantity           Int
+  available_quantity Int
+  
+  // Relasi
+  event              Event             @relation(fields: [event_id], references: [event_id])
+  transactionItems   TransactionItem[]
+
+  @@map("tiket_types")
+}
+
+model Transaction {
+  transaction_id          Int               @id @default(autoincrement())
+  user_id                 Int
+  event_id                Int
+  transaction_date        DateTime          @default(now())
+  total_amount            Decimal
+  final_amount            Decimal
+  status                  String
+  payment_url             String?
+  payment_upload_deadline DateTime?
+  admin_deadline          DateTime?
+  point_used              Int               @default(0)
+  coupon_id               Int?
+  voucher_id              Int?
+  
+  // Relasi
+  user                    User              @relation(fields: [user_id], references: [user_id])
+  event                   Event             @relation(fields: [event_id], references: [event_id])
+  coupon                  RewardCoupon?     @relation(fields: [coupon_id], references: [coupon_id])
+  voucher                 Voucher?          @relation(fields: [voucher_id], references: [voucher_id])
+  transactionItems        TransactionItem[]
+
+  @@map("transaction")
+}
+
+model TransactionItem {
+  transaction_item_id Int         @id @default(autoincrement())
+  transaction_id      Int
+  tiket_id            Int
+  quantity            Int
+  price_per_tiket     Decimal
+  
+  // Relasi
+  transaction         Transaction @relation(fields: [transaction_id], references: [transaction_id])
+  ticketType          TicketType  @relation(fields: [tiket_id], references: [tiket_id])
+
+  @@map("transaction_item")
+}
+
+model Voucher {
+  voucher_id          Int            @id @default(autoincrement())
+  organizer_id        Int
+  event_id            Int
+  code_voucher        String         @unique
+  discount_percentage Int
+  max_discount_amount Decimal
+  start_date          DateTime
+  usage_limit         Int
+  used_count          Int            @default(0)
+  
+  // Relasi
+  organizer           EventOrganizer @relation(fields: [organizer_id], references: [organizer_id])
+  event               Event          @relation(fields: [event_id], references: [event_id])
+  transactions        Transaction[]
+
+  @@map("vouchers")
+}
+
+model Review {
+  review_id   Int      @id @default(autoincrement())
+  user_id     Int
+  event_id    Int
+  rating      Int
+  comment     String   @db.Text
+  review_date DateTime @default(now())
+  
+  // Relasi
+  user        User     @relation(fields: [user_id], references: [user_id])
+  event       Event    @relation(fields: [event_id], references: [event_id])
+
+  @@map("Review Entities")
+}
+
+model PointHistory {
+  hystory_id          Int      @id @default(autoincrement())
+  user_id             Int
+  amount              Int
+  type                String
+  description         String?
+  max_discount_amount Decimal?
+  create_at           DateTime @default(now())
+  expires_at          DateTime
+  
+  // Relasi
+  user                User     @relation(fields: [user_id], references: [user_id])
+
+  @@map("point_history")
+}
+
+model Referral {
+  referral_id      Int      @id @default(autoincrement())
+  referrer_user_id Int
+  referred_user_id Int
+  referred_at      DateTime @default(now())
+  status           String
+  
+  // Relasi Self-Join
+  referrer         User     @relation("Referrer", fields: [referrer_user_id], references: [user_id])
+  referred         User     @relation("Referred", fields: [referred_user_id], references: [user_id])
+
+  @@map("referrals")
+}
+
+model RewardCoupon {
+  coupon_id           Int          @id @default(autoincrement())
+  code                String       @unique
+  discount_percentage Int
+  max_discount_amount Decimal
+  expiration_date     DateTime
+  
+  // Relasi
+  userCoupons         UserCoupon[]
+  transactions        Transaction[]
+
+  @@map("reward coupon")
+}
+
+model UserCoupon {
+  user_coupon_id Int          @id @default(autoincrement())
+  user_id        Int
+  coupon_id      Int
+  is_used        Boolean      @default(false)
+  used_date      DateTime?
+  valid_until    DateTime
+  
+  // Relasi
+  user           User         @relation(fields: [user_id], references: [user_id])
+  coupon         RewardCoupon @relation(fields: [coupon_id], references: [coupon_id])
+
+  @@map("user_coupon")
+}
+
