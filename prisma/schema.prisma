@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Sample {
@@ -101,10 +102,10 @@ model TicketType {
 }
 
 model Transaction {
-  transaction_id          Int       @id @default(autoincrement())
+  transaction_id          Int               @id @default(autoincrement())
   user_id                 Int
   event_id                Int
-  transaction_date        DateTime  @default(now())
+  transaction_date        DateTime          @default(now())
   total_amount            Decimal
   final_amount            Decimal
   // status                  String
@@ -112,7 +113,7 @@ model Transaction {
   payment_url             String?
   payment_upload_deadline DateTime?
   admin_deadline          DateTime?
-  point_used              Int       @default(0)
+  point_used              Int               @default(0)
   coupon_id               Int?
   voucher_id              Int?
 
@@ -145,7 +146,6 @@ enum TransactionStatus {
   ACCEPTED
   REJECTED
 }
-
 
 model Voucher {
   voucher_id          Int      @id @default(autoincrement())

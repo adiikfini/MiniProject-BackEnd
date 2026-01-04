@@ -9,6 +9,7 @@ import { ForgotPasswordDTO } from "./dto/forgot-password.dto";
 import { ResetPasswordDTO } from "./dto/reset-password.dto";
 import { generateReferralCode } from "../../utils/refferral";
 import { addMonths } from "../../utils/date";
+import { BASE_URL_FE } from "../../config/env";
 
 export class AuthService {
   prisma: PrismaService;
@@ -19,6 +20,7 @@ export class AuthService {
     this.mailService = new MailService();
   }
 
+  
   register = async (body: RegisterDTO) => {
     const existingUser = await this.prisma.user.findFirst({
       where: { email: body.email },
@@ -166,7 +168,7 @@ export class AuthService {
       "Forgot Password",
       "forgot-password",
       {
-        resetUrl: `http://localhost:3000/reset-password/${accessToken}`,
+        resetUrl: `${BASE_URL_FE}/reset-password/${accessToken}`,
       }
     );
 
