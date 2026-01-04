@@ -17,18 +17,6 @@ export class EventService {
     return events;
   };
 
-  // createEvent = async (body: CreateEventDTO, image: Express.Multer.File) => {
-  //   // 1. upload dlu ke cloudinary
-  //   const { secure_url } = await this.cloudinaryService.upload(image);
-
-  //   // 2. insert data ke db
-  //   await this.prisma.event.create({
-  //     data: { ...body, image: secure_url },
-  //   });
-
-  //   // 3. return message success
-  //   return { message: "create product success" };
-  // };
   createEvent = async (
     organizerUserId: number,
     body: CreateEventDTO,

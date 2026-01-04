@@ -26,15 +26,6 @@ export class EventRouter {
     // public
     this.router.get("/", this.eventController.getEvents);
 
-    // organizer only
-    // this.router.post(
-    //   "/",
-    //   this.jwtMiddleware.verifyToken(process.env.JWT_SECRET!),
-    //   requireRole([Role.ORGANIZER]),
-    //   this.uploaderMiddleware.upload().fields([{ name: "image", maxCount: 1 }]),
-    //   validateBody(CreateEventDTO),
-    //   this.eventController.createEvent
-    // );
     this.router.post(
       "/",
       this.jwtMiddleware.verifyToken(process.env.JWT_SECRET!),

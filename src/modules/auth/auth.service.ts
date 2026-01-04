@@ -19,25 +19,6 @@ export class AuthService {
     this.mailService = new MailService();
   }
 
-  // register = async (body: RegisterDTO) => {
-  //   const user = await this.prisma.user.findFirst({
-  //     where: { email: body.email },
-  //   });
-
-  //   if (user) throw new ApiError("email already exist", 400);
-
-  //   const hashedPassword = await hashPassword(body.password);
-
-  //   await this.prisma.user.create({
-  //     data: {
-  //       name: body.name,
-  //       email: body.email,
-  //       password: hashedPassword,
-  //     },
-  //   });
-
-  //   return { message: "register success" };
-  // };
   register = async (body: RegisterDTO) => {
     const existingUser = await this.prisma.user.findFirst({
       where: { email: body.email },
@@ -81,25 +62,6 @@ export class AuthService {
         },
       });
     }
-
-    // 3. Create referral relation + reward
-    // if (referrerUser) {
-    //   await this.prisma.referral.create({
-    //     data: {
-    //       referrer_user_id: referrerUser.user_id,
-    //       referred_user_id: newUser.user_id,
-    //       status: "SUCCESS",
-    //     },
-    //   });
-
-    //   // example reward
-    //   await this.prisma.user.update({
-    //     where: { user_id: referrerUser.user_id },
-    //     data: {
-    //       point_balance: { increment: 10000 },
-    //     },
-    //   });
-    // }
 
     // 3. Create referral relation + reward
     if (referrerUser) {
@@ -159,49 +121,6 @@ export class AuthService {
     return { message: "register success" };
   };
 
-  // login = async (body: LoginDTO) => {
-  //   const user = await this.prisma.user.findFirst({
-  //     where: { email: body.email },
-  //   });
-
-  //   if (!user) throw new ApiError("Invalid credentials", 400);
-
-  //   const isPasswordMatch = await comparePassword(body.password, user.password);
-
-  //   if (!isPasswordMatch) throw new ApiError("Invalid credentials", 400);
-
-  //   const payload = { id: user.user_id };
-  //   const accessToken = sign(payload, process.env.JWT_SECRET!, {
-  //     expiresIn: "2h",
-  //   });
-
-  //   const { password, ...userWithoutPassword } = user;
-  //   return { ...userWithoutPassword, accessToken };
-  // };
-
-  // login = async (body: LoginDTO) => {  //ini dipake
-  //   const user = await this.prisma.user.findFirst({
-  //     where: { email: body.email },
-  //   });
-
-  //   if (!user) throw new ApiError("Invalid credentials", 400);
-
-  //   const isPasswordMatch = await comparePassword(body.password, user.password);
-
-  //   if (!isPasswordMatch) throw new ApiError("Invalid credentials", 400);
-
-  //   const payload = {
-  //     id: user.user_id,
-  //     role: user.role,
-  //   };
-  //   const accessToken = sign(payload, process.env.JWT_SECRET!, {
-  //     expiresIn: "2h",
-  //   });
-
-  //   const { password, ...userWithoutPassword } = user;
-  //   return { ...userWithoutPassword, accessToken };
-  // };
-
   login = async (body: LoginDTO) => {
     const user = await this.prisma.user.findFirst({
       where: { email: body.email },
@@ -222,10 +141,10 @@ export class AuthService {
     });
 
     return {
-      id: user.user_id.toString(), // ⬅️ PENTING
+      id: user.user_id.toString(),
       name: user.name,
       email: user.email,
-      role: user.role, // ⬅️ EXPLICIT
+      role: user.role,
       accessToken,
     };
   };

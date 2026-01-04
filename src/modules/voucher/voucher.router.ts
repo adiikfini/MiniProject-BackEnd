@@ -7,24 +7,12 @@ import { VoucherController } from "./voucher.controller";
 export class VoucherRouter {
   router: Router;
   voucherController: VoucherController;
-//   uploaderMiddleware: UploaderMiddleware;
 
   constructor() {
     this.router = Router();
     this.voucherController = new VoucherController();
-    // this.uploaderMiddleware = new UploaderMiddleware();
     this.initRoutes();
   }
-
-  //   private initRoutes = () => {
-  //     this.router.get("/", this.voucherController.getVouchers);
-  //     this.router.post(
-  //       "/",
-  //       this.uploaderMiddleware.upload().fields([{ name: "image", maxCount: 1 }]),
-  //       validateBody(CreateVoucherDTO),
-  //       this.voucherController.createVoucher
-  //     );
-  //   };
 
   private initRoutes = () => {
     this.router.get("/", this.voucherController.getVouchers);

@@ -14,14 +14,6 @@ export class EventController {
     return res.status(200).send(result);
   };
 
-  // createEvent = async (req: Request, res: Response) => {
-  //   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-  //   const image = files.image?.[0];
-  //   if (!image) throw new ApiError("Image is required", 400);
-  //   const result = await this.eventService.createEvent(req.body, image);
-  //   return res.status(200).send(result);
-  // };
-
   createEvent = async (req: Request, res: Response) => {
     const userId = res.locals.user.id;
 

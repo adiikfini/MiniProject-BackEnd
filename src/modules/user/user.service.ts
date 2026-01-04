@@ -1,32 +1,3 @@
-// import { CloudinaryService } from "../cloudinary/cloudinary.service";
-// import { PrismaService } from "../prisma/prisma.service";
-// import { CreateUserDTO } from "./dto/create-user.dto";
-
-// export class UserService {
-//   prisma: PrismaService;
-//   cloudinaryService: CloudinaryService;
-
-//   constructor() {
-//     this.prisma = new PrismaService();
-//     this.cloudinaryService = new CloudinaryService();
-//   }
-
-//   getUsers = async () => {
-//     const user = await this.prisma.user.findMany();
-//     return user;
-//   };
-
-//   createUser = async (body: CreateUserDTO) => {
-//     await this.prisma.voucher.create({
-//       data: {
-
-//       },
-//     });
-
-//     return { message: "create voucher success" };
-//   };
-// }
-
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { comparePassword, hashPassword } from "../../utils/password";

@@ -16,19 +16,6 @@ export class VoucherService {
     return voucher;
   };
 
-  //   createVoucher = async (body: CreateVoucherDTO, image: Express.Multer.File) => {
-  //     // 1. upload dlu ke cloudinary
-  //     const { secure_url } = await this.cloudinaryService.upload(image);
-
-  //     // 2. insert data ke db
-  //     await this.prisma.voucher.create({
-  //       data: { ...body, image: secure_url },
-  //     });
-
-  //     // 3. return message success
-  //     return { message: "create product success" };
-  //   };
-
   createVoucher = async (body: CreateVoucherDTO) => {
     await this.prisma.voucher.create({
       data: {
