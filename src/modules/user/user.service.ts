@@ -42,6 +42,7 @@ export class UserService {
         role: true,
         profile_picture_url: true,
         point_balance: true,
+        refferal_code: true,
       },
     });
 
